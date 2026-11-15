@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Tumble Tower</string>
+    <string name="tagline">BANGUN • SEIMBANGKAN • BERTAHAN</string>
+    <string name="auth_subtitle">Masuk dengan Google untuk menyimpan bintang kampanye, tantangan harian, dan peringkat global.</string>
+    <string name="sign_in_with_google">Masuk dengan Google</string>
+    <string name="choose_language">Pilih Bahasa</string>
+    <string name="skip">Lewati</string>
+    <string name="next">Lanjut</string>
+    <string name="start_playing">Mulai Bermain</string>
+    <string name="play_now">MAIN</string>
+    <string name="tut_step1_title">Tarik &amp; Susun Blok</string>
+    <string name="tut_step1_desc">Geser keluar blok dari lapisan bawah, lalu ketuk puncak menara untuk menaruhnya!</string>
+    <string name="tut_step2_title">Tangan Stabil</string>
+    <string name="tut_step2_desc">Tarik dengan halus agar bilah presisi tetap hijau dan raih bonus kombo!</string>
+    <string name="tut_step3_title">Hadapi Event Cuaca</string>
+    <string name="tut_step3_desc">Waspadai angin, gempa, hujan, dan TNT! Gunakan Freeze, Glue, Shield, atau Crane.</string>
+</resources>

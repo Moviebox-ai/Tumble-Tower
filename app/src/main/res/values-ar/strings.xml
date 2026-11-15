@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Tumble Tower</string>
+    <string name="tagline">ابنِ • وازن • انجُ</string>
+    <string name="auth_subtitle">سجّل الدخول باستخدام Google لحفظ تقدمك ونجوم الحملة وترتيبك العالمي.</string>
+    <string name="sign_in_with_google">تسجيل الدخول عبر Google</string>
+    <string name="choose_language">اختر اللغة</string>
+    <string name="skip">تخطي</string>
+    <string name="next">التالي</string>
+    <string name="start_playing">ابدأ اللعب</string>
+    <string name="play_now">العب</string>
+    <string name="tut_step1_title">اسحب وضع الكتل</string>
+    <string name="tut_step1_desc">اسحب كتلة من الطبقات السفلية ثم اضغط على القمة المضيئة لوضعها.</string>
+    <string name="tut_step2_title">توازن اليد الثابتة</string>
+    <string name="tut_step2_desc">اسحب بسلاسة للحفاظ على شريط الدقة باللون الأخضر وكسب المضاعفات.</string>
+    <string name="tut_step3_title">تجاوز الأحداث المباشرة</string>
+    <string name="tut_step3_desc">انتبه للرياح والزلازل والمطر والمتفجرات واستخدم القدرات الخاصة.</string>
+</resources>

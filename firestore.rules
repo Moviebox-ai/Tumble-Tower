@@ -1,0 +1,188 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global safety net: deny everything by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Primitive Helpers ---
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // --- Entity Validation Helpers ---
+    function isValidUserProfile(data) {
+      return data.userId is string &&
+             data.userId == request.auth.uid &&
+             data.userId.size() <= 128 &&
+             data.displayName is string &&
+             data.displayName.size() >= 1 &&
+             data.displayName.size() <= 40 &&
+             (!('avatarId' in data) || (data.avatarId is string && data.avatarId.size() <= 40)) &&
+             data.coins is int && data.coins >= 0 && data.coins <= 100000000 &&
+             data.gems is int && data.gems >= 0 && data.gems <= 10000000 &&
+             data.xpLevel is int && data.xpLevel >= 1 && data.xpLevel <= 1000 &&
+             (!('xpPoints' in data) || (data.xpPoints is int && data.xpPoints >= 0)) &&
+             (!('equippedSkin' in data) || (data.equippedSkin is string && data.equippedSkin.size() <= 40)) &&
+             (!('equippedTheme' in data) || (data.equippedTheme is string && data.equippedTheme.size() <= 40)) &&
+             (!('equippedEffect' in data) || (data.equippedEffect is string && data.equippedEffect.size() <= 40)) &&
+             (!('adsRemoved' in data) || data.adsRemoved is bool) &&
+             (!('bestHeight' in data) || (data.bestHeight is int && data.bestHeight >= 0)) &&
+             (!('bestScore' in data) || (data.bestScore is int && data.bestScore >= 0)) &&
+             (!('totalTowersBuilt' in data) || (data.totalTowersBuilt is int && data.totalTowersBuilt >= 0)) &&
+             (!('perfectPulls' in data) || (data.perfectPulls is int && data.perfectPulls >= 0)) &&
+             (!('totalPulls' in data) || (data.totalPulls is int && data.totalPulls >= 0)) &&
+             (!('playTimeSeconds' in data) || (data.playTimeSeconds is int && data.playTimeSeconds >= 0)) &&
+             (!('dailyStreak' in data) || (data.dailyStreak is int && data.dailyStreak >= 0 && data.dailyStreak <= 3650)) &&
+             (!('lastDailyRewardDate' in data) || (data.lastDailyRewardDate is string && data.lastDailyRewardDate.size() <= 20)) &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidLevelProgress(data) {
+      return data.userId is string &&
+             data.userId == request.auth.uid &&
+             data.userId.size() <= 128 &&
+             data.levelNumber is int && data.levelNumber >= 1 && data.levelNumber <= 500 &&
+             data.worldId is int && data.worldId >= 1 && data.worldId <= 10 &&
+             data.stars is int && data.stars >= 0 && data.stars <= 3 &&
+             data.highScore is int && data.highScore >= 0 && data.highScore <= 100000000 &&
+             (!('bestHeight' in data) || (data.bestHeight is int && data.bestHeight >= 0 && data.bestHeight <= 1000)) &&
+             data.completed is bool &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidLeaderboardEntry(data) {
+      return data.userId is string &&
+             data.userId == request.auth.uid &&
+             data.userId.size() <= 128 &&
+             data.displayName is string &&
+             data.displayName.size() >= 1 &&
+             data.displayName.size() <= 40 &&
+             (!('avatarId' in data) || (data.avatarId is string && data.avatarId.size() <= 40)) &&
+             data.boardType in ['daily', 'weekly', 'all_time', 'daily_challenge'] &&
+             data.dateKey is string &&
+             data.dateKey.size() >= 1 &&
+             data.dateKey.size() <= 32 &&
+             data.score is int && data.score >= 0 && data.score <= 100000000 &&
+             data.height is int && data.height >= 0 && data.height <= 5000 &&
+             (!('accuracyPercent' in data) || (data.accuracyPercent is int && data.accuracyPercent >= 0 && data.accuracyPercent <= 100)) &&
+             data.isPublic is bool &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    // --- Collection Rules ---
+
+    match /users/{userId} {
+      allow get: if isSignedIn() && isValidId(userId) && request.auth.uid == userId;
+      allow list: if false;
+
+      allow create: if isSignedIn() &&
+                       isValidId(userId) &&
+                       request.auth.uid == userId &&
+                       incoming().keys().hasAll(['userId', 'displayName', 'coins', 'gems', 'xpLevel', 'createdAt', 'updatedAt']) &&
+                       incoming().keys().hasOnly([
+                         'userId', 'displayName', 'avatarId', 'coins', 'gems', 'xpLevel', 'xpPoints',
+                         'equippedSkin', 'equippedTheme', 'equippedEffect', 'adsRemoved',
+                         'bestHeight', 'bestScore', 'totalTowersBuilt', 'perfectPulls', 'totalPulls',
+                         'playTimeSeconds', 'dailyStreak', 'lastDailyRewardDate', 'createdAt', 'updatedAt'
+                       ]) &&
+                       isValidUserProfile(incoming());
+
+      allow update: if isSignedIn() &&
+                       isValidId(userId) &&
+                       request.auth.uid == userId &&
+                       isValidUserProfile(incoming()) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly([
+                         'displayName', 'avatarId', 'coins', 'gems', 'xpLevel', 'xpPoints',
+                         'equippedSkin', 'equippedTheme', 'equippedEffect', 'adsRemoved',
+                         'bestHeight', 'bestScore', 'totalTowersBuilt', 'perfectPulls', 'totalPulls',
+                         'playTimeSeconds', 'dailyStreak', 'lastDailyRewardDate', 'updatedAt'
+                       ]);
+
+      allow delete: if isSignedIn() && isValidId(userId) && request.auth.uid == userId;
+
+      match /level_progress/{levelId} {
+        allow get: if isSignedIn() && isValidId(userId) && isValidId(levelId) && request.auth.uid == userId;
+        allow list: if isSignedIn() && isValidId(userId) && request.auth.uid == userId;
+
+        allow create: if isSignedIn() &&
+                         isValidId(userId) &&
+                         isValidId(levelId) &&
+                         request.auth.uid == userId &&
+                         incoming().keys().hasAll(['userId', 'levelNumber', 'worldId', 'stars', 'highScore', 'completed', 'createdAt', 'updatedAt']) &&
+                         incoming().keys().hasOnly([
+                           'userId', 'levelNumber', 'worldId', 'stars', 'highScore', 'bestHeight',
+                           'completed', 'createdAt', 'updatedAt'
+                         ]) &&
+                         isValidLevelProgress(incoming());
+
+        allow update: if isSignedIn() &&
+                         isValidId(userId) &&
+                         isValidId(levelId) &&
+                         request.auth.uid == userId &&
+                         isValidLevelProgress(incoming()) &&
+                         incoming().userId == existing().userId &&
+                         incoming().levelNumber == existing().levelNumber &&
+                         incoming().worldId == existing().worldId &&
+                         incoming().createdAt == existing().createdAt &&
+                         incoming().diff(existing()).affectedKeys().hasOnly([
+                           'stars', 'highScore', 'bestHeight', 'completed', 'updatedAt'
+                         ]);
+
+        allow delete: if isSignedIn() && isValidId(userId) && isValidId(levelId) && request.auth.uid == userId;
+      }
+    }
+
+    match /leaderboard_entries/{entryId} {
+      allow get: if isSignedIn() && isValidId(entryId) && (resource == null || existing().isPublic == true || existing().userId == request.auth.uid);
+      allow list: if isSignedIn() &&
+                     existing().isPublic == true &&
+                     existing().boardType in ['daily', 'weekly', 'all_time', 'daily_challenge'];
+
+      allow create: if isSignedIn() &&
+                       isValidId(entryId) &&
+                       incoming().keys().hasAll([
+                         'userId', 'displayName', 'boardType', 'dateKey', 'score', 'height',
+                         'isPublic', 'createdAt', 'updatedAt'
+                       ]) &&
+                       incoming().keys().hasOnly([
+                         'userId', 'displayName', 'avatarId', 'boardType', 'dateKey', 'score',
+                         'height', 'accuracyPercent', 'isPublic', 'createdAt', 'updatedAt'
+                       ]) &&
+                       isValidLeaderboardEntry(incoming());
+
+      allow update: if isSignedIn() &&
+                       isValidId(entryId) &&
+                       existing().userId == request.auth.uid &&
+                       isValidLeaderboardEntry(incoming()) &&
+                       incoming().userId == existing().userId &&
+                       incoming().boardType == existing().boardType &&
+                       incoming().dateKey == existing().dateKey &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly([
+                         'displayName', 'avatarId', 'score', 'height', 'accuracyPercent', 'isPublic', 'updatedAt'
+                       ]);
+
+      allow delete: if isSignedIn() && isValidId(entryId) && existing().userId == request.auth.uid;
+    }
+  }
+}

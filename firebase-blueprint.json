@@ -1,0 +1,83 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Player profile, economy wallet, equipped cosmetics, and career statistics.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Firebase Auth UID of the player." },
+        "displayName": { "type": "string", "description": "Player display name." },
+        "avatarId": { "type": "string", "description": "Selected avatar identifier." },
+        "coins": { "type": "integer", "description": "Soft currency coin balance." },
+        "gems": { "type": "integer", "description": "Premium currency gem balance." },
+        "xpLevel": { "type": "integer", "description": "Player progression level." },
+        "xpPoints": { "type": "integer", "description": "Accumulated experience points." },
+        "equippedSkin": { "type": "string", "description": "Equipped block skin ID." },
+        "equippedTheme": { "type": "string", "description": "Equipped tower theme ID." },
+        "equippedEffect": { "type": "string", "description": "Equipped particle effect ID." },
+        "adsRemoved": { "type": "boolean", "description": "Whether ads removal IAP is active." },
+        "bestHeight": { "type": "integer", "description": "Highest tower built in blocks." },
+        "bestScore": { "type": "integer", "description": "Highest single-run score." },
+        "totalTowersBuilt": { "type": "integer", "description": "Total completed towers." },
+        "perfectPulls": { "type": "integer", "description": "Total steady-hand perfect pulls." },
+        "totalPulls": { "type": "integer", "description": "Total block pulls attempted." },
+        "playTimeSeconds": { "type": "integer", "description": "Total play duration in seconds." },
+        "dailyStreak": { "type": "integer", "description": "Consecutive daily reward streak." },
+        "lastDailyRewardDate": { "type": "string", "description": "Last claimed daily reward YYYY-MM-DD." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation (FieldValue.serverTimestamp())." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp on last update (FieldValue.serverTimestamp())." }
+      },
+      "required": ["userId", "displayName", "coins", "gems", "xpLevel", "createdAt", "updatedAt"]
+    },
+    "LevelProgress": {
+      "title": "LevelProgress",
+      "description": "Campaign level completion, stars, and personal best score.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner Firebase Auth UID." },
+        "levelNumber": { "type": "integer", "description": "Campaign level number (1..210)." },
+        "worldId": { "type": "integer", "description": "Campaign world index (1..5)." },
+        "stars": { "type": "integer", "description": "Stars earned (0..3)." },
+        "highScore": { "type": "integer", "description": "Best score achieved on this level." },
+        "bestHeight": { "type": "integer", "description": "Tallest tower height achieved on this level." },
+        "completed": { "type": "boolean", "description": "Whether level objective was cleared." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp on update." }
+      },
+      "required": ["userId", "levelNumber", "worldId", "stars", "highScore", "completed", "createdAt", "updatedAt"]
+    },
+    "LeaderboardEntry": {
+      "title": "LeaderboardEntry",
+      "description": "Public leaderboard entry scoped to Daily, Weekly, All-Time, or Daily Challenge.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner Firebase Auth UID." },
+        "displayName": { "type": "string", "description": "Public player display name." },
+        "avatarId": { "type": "string", "description": "Public avatar identifier." },
+        "boardType": { "type": "string", "enum": ["daily", "weekly", "all_time", "daily_challenge"], "description": "Leaderboard category." },
+        "dateKey": { "type": "string", "description": "Period key e.g. 2026-11-13 or all." },
+        "score": { "type": "integer", "description": "Achieved score." },
+        "height": { "type": "integer", "description": "Tower height reached." },
+        "accuracyPercent": { "type": "integer", "description": "Steady-hand accuracy percentage (0..100)." },
+        "isPublic": { "type": "boolean", "description": "Visibility flag for leaderboard queries." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp on update." }
+      },
+      "required": ["userId", "displayName", "boardType", "dateKey", "score", "height", "isPublic", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Private player profile and progression wallet."
+    },
+    "/users/{userId}/level_progress/{levelId}": {
+      "schema": { "$ref": "#/entities/LevelProgress" },
+      "description": "User campaign level stars and high scores."
+    },
+    "/leaderboard_entries/{entryId}": {
+      "schema": { "$ref": "#/entities/LeaderboardEntry" },
+      "description": "Global leaderboard entries across Daily, Weekly, All-Time, and Daily Challenge boards."
+    }
+  }
+}

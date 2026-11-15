@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Tumble Tower</string>
+    <string name="tagline">CONSTRUYE • EQUILIBRA • SOBREVIVE</string>
+    <string name="auth_subtitle">Inicia sesión con Google para guardar tus estrellas de campaña y tu puesto en el ranking global.</string>
+    <string name="sign_in_with_google">Iniciar sesión con Google</string>
+    <string name="choose_language">Elige idioma</string>
+    <string name="skip">Saltar</string>
+    <string name="next">Siguiente</string>
+    <string name="start_playing">Empezar a jugar</string>
+    <string name="play_now">JUGAR</string>
+    <string name="tut_step1_title">Extrae y apila bloques</string>
+    <string name="tut_step1_desc">Desliza un bloque de las capas inferiores y toca la cima brillante para colocarlo arriba.</string>
+    <string name="tut_step2_title">Pulso firme</string>
+    <string name="tut_step2_desc">Mantén la barra de precisión en verde al tirar para conseguir multiplicadores de combo.</string>
+    <string name="tut_step3_title">Sobrevive a los eventos</string>
+    <string name="tut_step3_desc">Vigila el viento, terremotos, lluvia y TNT. Usa Freeze, Glue, Shield o Mini Crane.</string>
+</resources>

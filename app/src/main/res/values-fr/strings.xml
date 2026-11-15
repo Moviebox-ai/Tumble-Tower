@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Tumble Tower</string>
+    <string name="tagline">CONSTRUIS • ÉQUILIBRE • SURVIS</string>
+    <string name="auth_subtitle">Connectez-vous avec Google pour sauvegarder vos étoiles et votre rang mondial.</string>
+    <string name="sign_in_with_google">Se connecter avec Google</string>
+    <string name="choose_language">Choisir la langue</string>
+    <string name="skip">Passer</string>
+    <string name="next">Suivant</string>
+    <string name="start_playing">Commencer</string>
+    <string name="play_now">JOUER</string>
+    <string name="tut_step1_title">Tirez et empilez</string>
+    <string name="tut_step1_desc">Faites glisser un bloc du bas puis touchez le sommet pour le poser.</string>
+    <string name="tut_step2_title">Main sûre</string>
+    <string name="tut_step2_desc">Gardez la jauge de précision au vert pour obtenir des combos.</string>
+    <string name="tut_step3_title">Survivez aux événements</string>
+    <string name="tut_step3_desc">Attention au vent, séismes, pluie et TNT. Utilisez vos bonus !</string>
+</resources>

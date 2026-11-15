@@ -1,0 +1,6 @@
+{
+  "name": "Tumble Tower",
+  "description": "Physics-based tumbling tower game with 7 special block types, live weather events, 200+ campaign levels across 5 worlds, boss towers, power-ups, photo mode, and daily challenges.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

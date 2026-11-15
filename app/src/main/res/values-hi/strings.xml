@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Tumble Tower</string>
+    <string name="tagline">बनाओ • संतुलन रखो • जीतो</string>
+    <string name="auth_subtitle">अपने कैंपेन स्टार, डेली चैलेंज और ग्लोबल लीडरबोर्ड रैंक सेव करने के लिए Google से साइन इन करें।</string>
+    <string name="sign_in_with_google">Google से साइन इन करें</string>
+    <string name="choose_language">भाषा चुनें</string>
+    <string name="skip">छोड़ें</string>
+    <string name="next">आगे</string>
+    <string name="start_playing">खेलना शुरू करें</string>
+    <string name="play_now">खेलें</string>
+    <string name="tut_step1_title">ब्लॉक निकालें और ऊपर रखें</string>
+    <string name="tut_step1_desc">नीचे की परतों से ब्लॉक बाहर खींचें, फिर ऊपर चमकते हिस्से पर टैप करके रखें!</string>
+    <string name="tut_step2_title">स्टेडी हैंड कॉम्बो</string>
+    <string name="tut_step2_desc">प्रिसिशन बार को हरा रखने के लिए ब्लॉक को आराम से खींचें और कॉम्बो बोनस पाएं!</string>
+    <string name="tut_step3_title">लाइव इवेंट्स से बचें</string>
+    <string name="tut_step3_desc">तेज़ हवा, भूकंप, बारिश और TNT से सावधान रहें! Freeze, Glue, Shield या Crane का उपयोग करें।</string>
+</resources>
