@@ -315,7 +315,8 @@ private fun AuthenticatedAppContent(
                         PhotoModeScreen(
                             physicsState = physicsState,
                             onBack = { navController.popBackStack() },
-                            onCaptureAndShare = vm::captureAndSharePhoto
+                            onCaptureAndShare = vm::captureAndSharePhoto,
+                            equippedSkin = profile.equippedSkin
                         )
                     }
 

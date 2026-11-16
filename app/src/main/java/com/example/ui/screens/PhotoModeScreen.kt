@@ -48,18 +48,21 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.R
+import com.example.game.physics.BlockState
 import com.example.game.physics.BlockType
 import com.example.game.physics.PhysicsUiState
 import com.example.services.PhotoBackdrop
 import com.example.ui.components.ChunkyGameButton
 import com.example.ui.components.MockupBackButton
+import com.example.ui.components.drawPremiumIsometricBlock
 import com.example.ui.theme.GoldSun
 
 @Composable
 fun PhotoModeScreen(
     physicsState: PhysicsUiState,
     onBack: () -> Unit,
-    onCaptureAndShare: (PhotoBackdrop, Boolean) -> Unit
+    onCaptureAndShare: (PhotoBackdrop, Boolean) -> Unit,
+    equippedSkin: String = "wood"
 ) {
     var selectedBackdrop by remember { mutableStateOf(PhotoBackdrop.SUNSET) }
     var showWatermark by remember { mutableStateOf(true) }
@@ -138,32 +141,33 @@ fun PhotoModeScreen(
                             if (b.isShattered) return@forEach
                             val bx = cx + b.x * 75f * scale
                             val by = baseY - (b.layer + 1) * 24f * scale
-                            val bw = 56f * scale
-                            val bh = 21f * scale
-                            val col = when (b.type) {
-                                BlockType.ICE -> Color(0xFF38BDF8)
-                                BlockType.RUBBER -> Color(0xFFEC4899)
-                                BlockType.GOLD -> Color(0xFFFACC15)
-                                BlockType.BOMB -> Color(0xFFDC2626)
-                                BlockType.GLASS -> Color(0xFF93C5FD)
-                                BlockType.MAGNET -> Color(0xFFEF4444)
-                                BlockType.WOOD -> Color(0xFFD97706)
-                            }
-                            drawRoundRect(
-                                color = col,
+                            val isEven = b.layer % 2 == 0
+                            val bw = if (isEven) 56f * scale else 156f * scale
+                            val bh = if (isEven) 21f * scale else 18.5f * scale
+                            drawPremiumIsometricBlock(
+                                block = b,
                                 topLeft = Offset(bx - bw / 2f, by),
-                                size = Size(bw, bh),
-                                cornerRadius = CornerRadius(6f, 6f)
+                                bSize = Size(bw, bh),
+                                depthX = 6f * scale,
+                                depthY = -5f * scale,
+                                skin = equippedSkin,
+                                colorblindMode = false,
+                                textMeasurer = null
                             )
                         }
                     } else {
                         for (i in 0 until 8) {
                             val y = baseY - (i + 1) * 26f
-                            drawRoundRect(
-                                color = if (i % 3 == 1) Color(0xFF38BDF8) else Color(0xFFD97706),
+                            val demoType = if (i % 3 == 1) BlockType.ICE else BlockType.WOOD
+                            drawPremiumIsometricBlock(
+                                block = BlockState(id = i + 1, layer = i, slot = 1, type = demoType, x = 0f),
                                 topLeft = Offset(cx - 65f, y),
-                                size = Size(130f, 22f),
-                                cornerRadius = CornerRadius(6f, 6f)
+                                bSize = Size(130f, 22f),
+                                depthX = 8f,
+                                depthY = -6f,
+                                skin = equippedSkin,
+                                colorblindMode = false,
+                                textMeasurer = null
                             )
                         }
                     }

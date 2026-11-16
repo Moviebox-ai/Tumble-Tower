@@ -71,6 +71,7 @@ import com.example.services.StoreProduct
 import com.example.ui.components.AdBannerBar
 import com.example.ui.components.ChunkyGameButton
 import com.example.ui.components.GlassCard
+import com.example.ui.components.SkinPreviewBlockCanvas
 import com.example.ui.theme.CyanIce
 import com.example.ui.theme.EmeraldGo
 import com.example.ui.theme.GoldSun
@@ -164,12 +165,19 @@ fun ShopScreen(
                                 modifier = Modifier.padding(14.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(48.dp)
-                                        .clip(RoundedCornerShape(12.dp))
-                                        .background(Brush.linearGradient(listOf(item.previewPrimary, item.previewSecondary)))
-                                )
+                                if (category == "skin") {
+                                    SkinPreviewBlockCanvas(
+                                        skinId = item.id,
+                                        modifier = Modifier.size(54.dp)
+                                    )
+                                } else {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(48.dp)
+                                            .clip(RoundedCornerShape(12.dp))
+                                            .background(Brush.linearGradient(listOf(item.previewPrimary, item.previewSecondary)))
+                                    )
+                                }
                                 Spacer(modifier = Modifier.width(12.dp))
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(item.name, style = MaterialTheme.typography.titleLarge, color = Color.White)

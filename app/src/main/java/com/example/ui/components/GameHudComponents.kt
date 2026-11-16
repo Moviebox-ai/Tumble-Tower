@@ -66,6 +66,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.data.local.PowerUpInventory
+import com.example.game.physics.BlockState
 import com.example.game.physics.BlockType
 import com.example.game.physics.LiveEventType
 import com.example.game.physics.PowerUpType
@@ -612,105 +613,49 @@ fun BlockTypeBadgeCanvas(type: BlockType, modifier: Modifier = Modifier) {
     Canvas(modifier = modifier.size(56.dp)) {
         val w = size.width
         val h = size.height
-        when (type) {
-            BlockType.WOOD -> {
-                drawIsometricMiniBrick(
-                    topColor = Color(0xFFE69F58),
-                    frontColor = Color(0xFFB8692B),
-                    sideColor = Color(0xFF834216)
-                )
-            }
-            BlockType.ICE -> {
-                drawIsometricMiniBrick(
-                    topColor = Color(0xFFBAE6FD),
-                    frontColor = Color(0xFF38BDF8),
-                    sideColor = Color(0xFF0284C7)
-                )
-            }
-            BlockType.RUBBER -> {
-                drawIsometricMiniBrick(
-                    topColor = Color(0xFFF472B6),
-                    frontColor = Color(0xFFEC4899),
-                    sideColor = Color(0xFFBE185D)
-                )
-            }
-            BlockType.GOLD -> {
-                drawIsometricMiniBrick(
-                    topColor = Color(0xFFFEF08A),
-                    frontColor = Color(0xFFFACC15),
-                    sideColor = Color(0xFFCA8A04)
-                )
-            }
-            BlockType.GLASS -> {
-                drawIsometricMiniBrick(
-                    topColor = Color(0xFFE0F2FE).copy(alpha = 0.6f),
-                    frontColor = Color(0xFF7DD3FC).copy(alpha = 0.45f),
-                    sideColor = Color(0xFF38BDF8).copy(alpha = 0.55f),
-                    strokeColor = Color.White
-                )
-            }
-            BlockType.BOMB -> {
-                drawIsometricMiniBrick(
-                    topColor = Color(0xFFF87171),
-                    frontColor = Color(0xFFDC2626),
-                    sideColor = Color(0xFF991B1B),
-                    strokeColor = Color(0xFFFDE047)
-                )
-                drawCircle(color = GoldSun, radius = w * 0.08f, center = Offset(w * 0.72f, h * 0.16f))
-            }
-            BlockType.MAGNET -> {
-                drawArc(
-                    color = Color(0xFFEF4444),
-                    startAngle = 140f,
-                    sweepAngle = 260f,
-                    useCenter = false,
-                    topLeft = Offset(w * 0.16f, h * 0.16f),
-                    size = Size(w * 0.68f, h * 0.68f),
-                    style = Stroke(width = w * 0.18f, cap = StrokeCap.Round)
-                )
-                drawCircle(color = Color(0xFFE2E8F0), radius = w * 0.10f, center = Offset(w * 0.28f, h * 0.75f))
-                drawCircle(color = Color(0xFFE2E8F0), radius = w * 0.10f, center = Offset(w * 0.72f, h * 0.75f))
-            }
-        }
+        val previewBlock = BlockState(
+            id = type.ordinal + 1,
+            layer = 0,
+            slot = 1,
+            type = type,
+            x = 0f,
+            bombFuseMoves = 3
+        )
+        drawPremiumIsometricBlock(
+            block = previewBlock,
+            topLeft = Offset(w * 0.08f, h * 0.36f),
+            bSize = Size(w * 0.72f, h * 0.44f),
+            depthX = w * 0.14f,
+            depthY = -h * 0.16f,
+            skin = "wood",
+            colorblindMode = false,
+            textMeasurer = null
+        )
     }
 }
 
-private fun androidx.compose.ui.graphics.drawscope.DrawScope.drawIsometricMiniBrick(
-    topColor: Color,
-    frontColor: Color,
-    sideColor: Color,
-    strokeColor: Color? = null
-) {
-    val w = size.width
-    val h = size.height
-    val topFace = Path().apply {
-        moveTo(w * 0.12f, h * 0.42f)
-        lineTo(w * 0.54f, h * 0.22f)
-        lineTo(w * 0.90f, h * 0.40f)
-        lineTo(w * 0.48f, h * 0.60f)
-        close()
-    }
-    val frontFace = Path().apply {
-        moveTo(w * 0.12f, h * 0.42f)
-        lineTo(w * 0.48f, h * 0.60f)
-        lineTo(w * 0.48f, h * 0.84f)
-        lineTo(w * 0.12f, h * 0.66f)
-        close()
-    }
-    val sideFace = Path().apply {
-        moveTo(w * 0.48f, h * 0.60f)
-        lineTo(w * 0.90f, h * 0.40f)
-        lineTo(w * 0.90f, h * 0.64f)
-        lineTo(w * 0.48f, h * 0.84f)
-        close()
-    }
-    drawPath(topFace, topColor)
-    drawPath(frontFace, frontColor)
-    drawPath(sideFace, sideColor)
-    if (strokeColor != null) {
-        drawPath(topFace, strokeColor, style = Stroke(2f))
-        drawPath(frontFace, strokeColor, style = Stroke(2f))
-        drawPath(sideFace, strokeColor, style = Stroke(2f))
+@Composable
+fun SkinPreviewBlockCanvas(skinId: String, modifier: Modifier = Modifier) {
+    Canvas(modifier = modifier.size(52.dp)) {
+        val w = size.width
+        val h = size.height
+        val previewBlock = BlockState(
+            id = 42,
+            layer = 0,
+            slot = 1,
+            type = BlockType.WOOD,
+            x = 0f
+        )
+        drawPremiumIsometricBlock(
+            block = previewBlock,
+            topLeft = Offset(w * 0.08f, h * 0.36f),
+            bSize = Size(w * 0.72f, h * 0.44f),
+            depthX = w * 0.14f,
+            depthY = -h * 0.16f,
+            skin = skinId,
+            colorblindMode = false,
+            textMeasurer = null
+        )
     }
 }
 
